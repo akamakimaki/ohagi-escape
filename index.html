@@ -127,8 +127,6 @@
             flex-direction: column;
             align-items: center;
 
-            transform: translate(-50%, -50%);
-
             pointer-events: none;
         }
 
@@ -692,21 +690,25 @@
             if (side === 0) {
                 box.style.top = "10px";
                 box.style.left = "50%";
+                box.style.transform = "translateX(-50%)";
             }
 
             if (side === 1) {
                 box.style.right = "10px";
                 box.style.top = "50%";
+                box.style.transform = "translateY(-50%)";
             }
 
             if (side === 2) {
                 box.style.bottom = "10px";
                 box.style.left = "50%";
+                box.style.transform = "translateX(-50%)";
             }
 
             if (side === 3) {
                 box.style.left = "10px";
                 box.style.top = "50%";
+                box.style.transform = "translateY(-50%)";
             }
 
             game.appendChild(box);
@@ -750,9 +752,12 @@
             const danger =
                 showGiyuDanger(side);
 
-            const pattern =
-                Math.floor(Math.random() * 3);
+            const seconds = elapsed();
 
+            const pattern =
+                seconds >= 8
+                    ? Math.floor(Math.random() * 3)
+                    : Math.floor(Math.random() * 2);
             // 0: 連射
             // 1: 扇状
             // 2: 巨大おはぎ
@@ -882,7 +887,6 @@
         shareButton.addEventListener("click", () => {
             const shareUrl =
                 `https://ohagi-escape.makimaki-feed.net/share?score=${score}`;
-
             const text =
                 `🌊の🟤攻撃から${score}個かわした！\n` +
                 `でも最後は食わされたァ！！\n\n` +
@@ -892,7 +896,6 @@
             const url =
                 "https://bsky.app/intent/compose?text=" +
                 encodeURIComponent(text);
-
             window.open(url, "_blank");
         });
 
