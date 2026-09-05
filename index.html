@@ -318,6 +318,16 @@
             }
         }
     </style>
+
+    <meta property="og:title" content="おはぎから逃げろ！">
+    <meta property="og:description" content="🌊の🟤攻撃をかわし続けろ！">
+    <meta property="og:type" content="website">
+
+    <meta property="og:url" content="https://akamakimaki.github.io/ohagi-escape/">
+
+    <meta property="og:image" content="https://akamakimaki.github.io/ohagi-escape/images/title.png">
+
+    <meta name="twitter:card" content="summary_large_image">
 </head>
 
 <body>
@@ -870,19 +880,20 @@
         }
 
         shareButton.addEventListener("click", () => {
+            const gameUrl =
+                "https://akamakimaki.github.io/ohagi-escape/";
+
             const text =
                 `🌊の🟤攻撃から${score}個かわした！\n` +
                 `でも最後は食わされたァ！！\n\n` +
+                `${gameUrl}\n\n` +
                 `#おはぎから逃げろ`;
 
             const url =
                 "https://bsky.app/intent/compose?text=" +
                 encodeURIComponent(text);
 
-            window.open(
-                url,
-                "_blank"
-            );
+            window.open(url, "_blank");
         });
 
         function endGame() {
