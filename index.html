@@ -21,9 +21,14 @@
 
         #game {
             position: relative;
-            width: 100vw;
-            height: 100vh;
+
+            width: min(100vw, 56.25vh);
+            height: min(100vh, 177.78vw);
+
+            margin: 0 auto;
+
             overflow: hidden;
+
             background:
                 linear-gradient(#ffffff80, #ffffff80),
                 repeating-linear-gradient(0deg,
@@ -364,8 +369,8 @@
         const shareButton =
             document.getElementById("shareButton");
 
-        let playerX = window.innerWidth / 2;
-        let playerY = window.innerHeight / 2;
+        let playerX = game.clientWidth / 2;
+        let playerY = game.clientHeight / 2;
 
         let ohagis = [];
         let score = 0;
@@ -378,12 +383,12 @@
 
             playerX = Math.max(
                 margin,
-                Math.min(window.innerWidth - margin, x)
+                Math.min(game.clientWidth - margin, x)
             );
 
             playerY = Math.max(
                 margin,
-                Math.min(window.innerHeight - margin, y)
+                Math.min(game.clientHeight - margin, y)
             );
 
             player.style.left = playerX + "px";
@@ -392,18 +397,27 @@
 
         movePlayer(playerX, playerY);
 
+        function movePlayerFromPointer(event) {
+            const rect = game.getBoundingClientRect();
+
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+
+            movePlayer(x, y);
+        }
+
         game.addEventListener("pointermove", event => {
             if (!playing) return;
 
             if (event.buttons || event.pointerType === "touch") {
-                movePlayer(event.clientX, event.clientY);
+                movePlayerFromPointer(event);
             }
         });
 
         game.addEventListener("pointerdown", event => {
             if (!playing) return;
 
-            movePlayer(event.clientX, event.clientY);
+            movePlayerFromPointer(event);
         });
 
         function elapsed() {
@@ -447,15 +461,15 @@
             let targetX =
                 options.targetX ??
                 (
-                    window.innerWidth * 0.1 +
-                    Math.random() * window.innerWidth * 0.8
+                    game.clientWidth * 0.1 +
+                    Math.random() * game.clientWidth * 0.8
                 );
 
             let targetY =
                 options.targetY ??
                 (
-                    window.innerHeight * 0.1 +
-                    Math.random() * window.innerHeight * 0.8
+                    game.clientHeight * 0.1 +
+                    Math.random() * game.clientHeight * 0.8
                 );
 
             const dx = targetX - x;
@@ -489,8 +503,10 @@
                 y,
                 vx,
                 vy,
-                radius
+                radius,
+                passed: false,
             });
+
         }
 
         /* =========================
@@ -502,28 +518,28 @@
 
             if (side === 0) {
                 return {
-                    x: Math.random() * window.innerWidth,
+                    x: Math.random() * game.clientWidth,
                     y: -margin
                 };
             }
 
             if (side === 1) {
                 return {
-                    x: window.innerWidth + margin,
-                    y: Math.random() * window.innerHeight
+                    x: game.clientWidth + margin,
+                    y: Math.random() * game.clientHeight
                 };
             }
 
             if (side === 2) {
                 return {
-                    x: Math.random() * window.innerWidth,
-                    y: window.innerHeight + margin
+                    x: Math.random() * game.clientWidth,
+                    y: game.clientHeight + margin
                 };
             }
 
             return {
                 x: -margin,
-                y: Math.random() * window.innerHeight
+                y: Math.random() * game.clientHeight
             };
         }
 
@@ -549,16 +565,12 @@
                 warningX = inset;
             }
 
-            if (x > window.innerWidth) {
-                warningX = window.innerWidth - inset;
+            if (x > game.clientWidth) {
+                warningX = game.clientWidth - inset;
             }
 
-            if (y < 0) {
-                warningY = inset;
-            }
-
-            if (y > window.innerHeight) {
-                warningY = window.innerHeight - inset;
+            if (y > game.clientHeight) {
+                warningY = game.clientHeight - inset;
             }
 
             warning.style.left = warningX + "px";
@@ -576,7 +588,6 @@
 
             const roll = Math.random();
             const side = Math.floor(Math.random() * 4);
-
             const spawn = getSpawnPosition(side);
 
             const options = {
@@ -595,15 +606,11 @@
                 warningDelay = 700;
                 warningType = "giant";
 
-            } else if (
-                (seconds >= 8 && roll < 0.40) ||
-                (seconds < 8 && roll < 0.20)
-            ) {
+            } else if (seconds >= 5 && roll < 0.40) {
                 options.fast = true;
                 warningDelay = 250;
                 warningType = "fast";
             }
-
 
             showWarning(
                 spawn.x,
@@ -616,7 +623,6 @@
                 if (!playing) return;
 
                 createOhagi(options);
-
             }, warningDelay);
         }
 
@@ -918,8 +924,8 @@
         }
 
         /* =========================
-           描画
-        ========================= */
+    描画
+ ========================= */
 
         function update() {
             if (!playing) return;
@@ -945,13 +951,36 @@
                     return;
                 }
 
+                if (!o.passed) {
+                    const toPlayerX = playerX - o.x;
+                    const toPlayerY = playerY - o.y;
+
+                    const dot =
+                        toPlayerX * o.vx +
+                        toPlayerY * o.vy;
+
+                    if (dot < 0) {
+                        o.passed = true;
+
+                        score++;
+
+                        scoreText.textContent =
+                            "かわしたおはぎ：" + score;
+
+                        player.classList.remove("dodge");
+                        void player.offsetWidth;
+                        player.classList.add("dodge");
+
+                        setTimeout(() => {
+                            player.classList.remove("dodge");
+                        }, 160);
+                    }
+                }
                 const outside =
                     o.x < -150 ||
-                    o.x >
-                    window.innerWidth + 150 ||
+                    o.x > game.clientWidth + 150 ||
                     o.y < -150 ||
-                    o.y >
-                    window.innerHeight + 150;
+                    o.y > game.clientHeight + 150;
 
                 if (outside) {
                     o.el.remove();
@@ -960,24 +989,12 @@
                         i,
                         1
                     );
-
-                    score++;
-
-                    scoreText.textContent =
-                        "かわしたおはぎ：" +
-                        score;
-                    player.classList.remove("dodge");
-                    void player.offsetWidth;
-                    player.classList.add("dodge");
-
-                    setTimeout(() => {
-                        player.classList.remove("dodge");
-                    }, 160);
                 }
             }
 
             requestAnimationFrame(update);
         }
+
 
         /* 開始 */
 
