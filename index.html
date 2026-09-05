@@ -22,15 +22,15 @@
         #game {
             position: relative;
 
-            width: min(100vw, 56.25vh);
-            height: min(100vh, 177.78vw);
+            width: min(100vw, 75vh);
+            height: min(100vh, 133.33vw);
 
             margin: 0 auto;
 
             overflow: hidden;
 
-            background:
-                linear-gradient(#ffffff80, #ffffff80),
+
+            background: linear-gradient(#ffffff80, #ffffff80),
                 repeating-linear-gradient(0deg,
                     #ddd 0px,
                     #ddd 1px,
@@ -41,6 +41,13 @@
                     #ddd 1px,
                     transparent 1px,
                     transparent 50px);
+        }
+
+        @media (pointer: coarse) {
+            #game {
+                width: min(100vw, 56.25vh);
+                height: min(100vh, 177.78vw);
+            }
         }
 
         #score {
@@ -876,9 +883,6 @@
         /* =========================
            当たり判定
         ========================= */
-
-        const isTouchDevice =
-            window.matchMedia("(pointer: coarse)").matches;
 
         function collision(o) {
             const dx =
