@@ -569,6 +569,10 @@
                 warningX = game.clientWidth - inset;
             }
 
+            if (y < 0) {
+                warningY = inset;
+            }
+
             if (y > game.clientHeight) {
                 warningY = game.clientHeight - inset;
             }
@@ -873,6 +877,9 @@
            当たり判定
         ========================= */
 
+        const isTouchDevice =
+            window.matchMedia("(pointer: coarse)").matches;
+
         function collision(o) {
             const dx =
                 playerX - o.x;
@@ -886,8 +893,11 @@
                     dy * dy
                 );
 
+            const playerRadius =
+                isTouchDevice ? 16 : 20;
+
             return distance <
-                20 + o.radius;
+                playerRadius + o.radius;
         }
 
         shareButton.addEventListener("click", () => {
