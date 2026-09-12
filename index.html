@@ -122,6 +122,44 @@
             font-size: 20px;
         }
 
+        #privateScoreArea {
+            width: min(80vw, 260px);
+            margin-top: 4px;
+            text-align: center;
+        }
+
+        #rankingName {
+            box-sizing: border-box;
+            width: 100%;
+            padding: 10px 14px;
+            border: 0;
+            border-radius: 999px;
+            font-size: 14px;
+            text-align: center;
+            outline: none;
+        }
+
+        #rankingSubmitBtn {
+            width: 100%;
+            font-size: 15px;
+        }
+
+        #personalHistoryBtn {
+            margin-top: 4px;
+            padding: 4px 8px;
+            background: transparent;
+            color: white;
+            font-size: 13px;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+
+        #rankingMessage {
+            min-height: 16px;
+            margin-top: 4px;
+            font-size: 12px;
+        }
+
         button {
             margin-top: 10px;
             padding: 12px 22px;
@@ -356,6 +394,20 @@
             <h1>食わされたァ</h1>
             <p id="result"></p>
 
+            <div id="privateScoreArea">
+                <input id="rankingName" type="text" placeholder="Blueskyハンドル" maxlength="253">
+
+                <button id="rankingSubmitBtn" type="button">
+                    この記録を登録
+                </button>
+
+                <button id="personalHistoryBtn" type="button">
+                    自分の記録を見る
+                </button>
+
+                <div id="rankingMessage"></div>
+            </div>
+
             <button id="shareButton">
                 Blueskyで結果をシェア
             </button>
@@ -375,6 +427,18 @@
         const result = document.getElementById("result");
         const shareButton =
             document.getElementById("shareButton");
+
+        const rankingName =
+            document.getElementById("rankingName");
+
+        const rankingSubmitBtn =
+            document.getElementById("rankingSubmitBtn");
+
+        const personalHistoryBtn =
+            document.getElementById("personalHistoryBtn");
+
+        const rankingMessage =
+            document.getElementById("rankingMessage");
 
         let playerX = game.clientWidth / 2;
         let playerY = game.clientHeight / 2;
@@ -916,6 +980,40 @@
                 "https://bsky.app/intent/compose?text=" +
                 encodeURIComponent(text);
             window.open(url, "_blank");
+        });
+
+        rankingSubmitBtn.addEventListener("click", () => {
+            const handle =
+                rankingName.value
+                    .trim()
+                    .replace(/^@/, "");
+
+            if (!handle) {
+                rankingMessage.textContent =
+                    "Blueskyハンドルを入力してください";
+                return;
+            }
+
+            rankingSubmitBtn.disabled = true;
+            rankingMessage.textContent =
+                "Blueskyでログインしてください";
+
+            const loginUrl =
+                "https://ohagi-ranking.makimaki-feed.net/login" +
+                "?handle=" +
+                encodeURIComponent(handle) +
+                "&game=escape&score=" +
+                encodeURIComponent(score);
+
+            window.location.href = loginUrl;
+        });
+
+        personalHistoryBtn.addEventListener("click", () => {
+            window.open(
+                "https://ohagi-ranking.makimaki-feed.net/?game=escape&view=mine",
+                "_blank",
+                "noopener,noreferrer"
+            );
         });
 
         function endGame() {
