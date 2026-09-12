@@ -105,8 +105,10 @@
             position: absolute;
             inset: 0;
             z-index: 50;
-            background: rgba(0, 0, 0, .58);
+            padding: 24px 18px;
+            background: rgba(45, 40, 35, 0.45);
             color: white;
+
             align-items: center;
             justify-content: center;
             flex-direction: column;
@@ -114,37 +116,48 @@
         }
 
         #gameOver h1 {
-            margin: 0 0 8px;
-            font-size: 36px;
+            margin: 0 0 14px;
+            font-size: 30px;
+            font-weight: 900;
+            line-height: 1.15;
+            text-shadow:
+                0 2px 0 rgba(0, 0, 0, 0.25);
         }
 
-        #gameOver p {
-            font-size: 20px;
+        #result {
+            margin: 0 0 14px;
+            font-size: 42px;
+            font-weight: 900;
+            line-height: 1;
         }
 
         #privateScoreArea {
-            width: min(100%, 240px);
-            margin: 0 auto 18px;
+            width: min(100%, 200px);
+            margin: 0 auto 12px;
             text-align: center;
         }
 
         #rankingName {
             box-sizing: border-box;
             width: 100%;
-            height: 40px;
+            height: 36px;
             margin: 0 0 8px;
             padding: 0 12px;
+
             border: 0;
             border-radius: 999px;
-            background: rgba(255, 255, 255, 0.92);
+
+            background: rgba(255, 255, 255, 0.94);
             color: #3b3029;
+
             font-family: inherit;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 700;
-            text-align: left;
+
             outline: none;
+
             box-shadow:
-                inset 0 0 0 2px rgba(83, 65, 50, 0.12);
+                0 2px 6px rgba(0, 0, 0, 0.18);
         }
 
         #rankingName:focus {
@@ -154,19 +167,24 @@
 
         #rankingSubmitBtn {
             width: 100%;
-            height: 42px;
-            margin: 0 0 8px;
+            height: 36px;
+            margin: 0 0 7px;
             padding: 0;
+
             border: 0;
             border-radius: 999px;
+
             background: #7a9f68;
             color: #fff;
+
             font-family: inherit;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 900;
+
             cursor: pointer;
+
             box-shadow:
-                0 3px 0 rgba(62, 82, 52, 0.4);
+                0 2px 5px rgba(0, 0, 0, 0.2);
         }
 
         #rankingSubmitBtn:active {
@@ -182,29 +200,71 @@
 
         #personalHistoryBtn {
             display: inline-block;
+
             width: auto;
             height: auto;
+
             margin: 0;
-            padding: 3px 6px;
+            padding: 2px 4px;
+
             border: 0;
             background: transparent;
-            color: rgba(255, 255, 255, 0.92);
+
+            color: rgba(255, 255, 255, 0.95);
+
             font-family: inherit;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 800;
+
             text-decoration: underline;
             text-underline-offset: 3px;
+
             cursor: pointer;
         }
 
         #rankingMessage {
-            min-height: 14px;
+            min-height: 12px;
             margin-top: 5px;
+
             color: rgba(255, 255, 255, 0.88);
-            font-size: 10px;
+
+            font-size: 9px;
             font-weight: 700;
+
             text-align: center;
         }
+
+        #retryButton,
+        #shareButton {
+            width: 174px;
+            height: 36px;
+
+            margin-top: 8px;
+            padding: 0 12px;
+
+            border: 0;
+            border-radius: 999px;
+
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 900;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        #retryButton {
+            background: #fffaf0;
+            color: #3b3029;
+        }
+
+        #shareButton {
+            background: #1688f8;
+            color: white;
+        }
+
 
         button {
             margin-top: 10px;
@@ -454,12 +514,12 @@
                 <div id="rankingMessage"></div>
             </div>
 
-            <button id="shareButton">
-                Blueskyで結果をシェア
+            <button id="retryButton" onclick="location.reload()">
+                もう一回
             </button>
 
-            <button onclick="location.reload()">
-                もう一回
+            <button id="shareButton">
+                Blueskyで結果を投稿
             </button>
         </div>
 
