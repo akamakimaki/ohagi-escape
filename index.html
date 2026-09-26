@@ -588,6 +588,13 @@
             font-size: 9px;
             text-align: left;
         }
+
+        /* ランキングサイトへ移動して登録するため、旧ログイン欄は非表示 */
+        #rankingName,
+        #rankingLoginHint,
+        #rankingMessage {
+            display: none !important;
+        }
     </style>
 
     <meta property="og:title" content="おはぎから逃げろ！">
@@ -1445,77 +1452,19 @@
 
                 rankingSubmitBtn.addEventListener(
                     "click",
-                    async event => {
+                    event => {
 
                         event.preventDefault();
 
-                        if (
-                            rankingSubmitBtn.disabled
-                        ) {
-                            return;
-                        }
+                        const url =
+                            PRIVATE_SCORE_API +
+                            "/?game=escape&view=mine&score=" +
+                            encodeURIComponent(score);
 
-                        rankingSubmitBtn.disabled =
-                            true;
-
-                        rankingSubmitBtn.textContent =
-                            "登録中…";
-
-                        rankingMessage.textContent =
-                            "";
-
-                        try {
-
-                            const loggedIn =
-                                await ensureBlueskyLogin();
-
-                            if (!loggedIn) {
-
-                                rankingSubmitBtn.disabled =
-                                    false;
-
-                                rankingSubmitBtn.textContent =
-                                    "この記録を登録";
-
-                                return;
-                            }
-
-                            const response =
-                                await savePrivateScore();
-
-                            if (!response.ok) {
-                                throw new Error(
-                                    "private score submit failed"
-                                );
-                            }
-
-                            rankingSubmitBtn.textContent =
-                                "✓ 記録しました！";
-
-                            rankingSubmitBtn.classList.add(
-                                "is-saved"
-                            );
-
-                            rankingMessage.textContent =
-                                "自分の記録に保存しました！";
-
-                            updateRankingLoginUI();
-
-                        } catch (error) {
-
-                            console.error(error);
-
-                            rankingSubmitBtn.disabled =
-                                false;
-
-                            rankingSubmitBtn.textContent =
-                                "この記録を登録";
-
-                            rankingMessage.textContent =
-                                "保存に失敗しました";
-                        }
+                        window.location.href = url;
                     }
                 );
+
 
                 personalHistoryBtn.addEventListener("click", () => {
                     window.open(
